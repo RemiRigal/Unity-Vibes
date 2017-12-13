@@ -4,21 +4,20 @@ using UnityEngine;
 
 public class ObjectManager : MonoBehaviour {
 
-    private TCPServer tcpServer;
-
     private Dictionary<int, Object> objects;
 
-	void Start () {
-        tcpServer = new TCPServer();
-        tcpServer.OnDataReceived += new HandlePacketData(OnMessageReceived);
-        tcpServer.OnClientConnected += new HandleClientConnection(OnClientConnected);
-	}
-
-    void OnClientConnected() {
-        Debug.Log("Client connected");
+    public enum TestEnum : int {
+        First, Second
     }
 
-    void OnMessageReceived(string message) {
-        Debug.Log("Received: " + message);
+    public class Test {
+        public string test;
+        public int test2;
+        public TestEnum test3;
+    }
+
+	void Start () {
+        string json = "{\"test\": \"Bonjour\", \"test2\": 12, \"test3\": 1}";
+        Test o = JsonUtility.FromJson<Test>(json);
     }
 }

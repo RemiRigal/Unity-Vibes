@@ -7,30 +7,27 @@ using System.Threading;
 using UnityEngine;
 
 public delegate void HandlePacketData(string message);
-public delegate void HandleClientConnection();
 
 public class StateObject {
     public const int BufferSize = 1024;
     public byte[] buffer = new byte[BufferSize];
+    public Socket socket;
     public StringBuilder sb = new StringBuilder();
 }
 
 public class TCPServer {
 
     public event HandlePacketData OnDataReceived;
-    public event HandleClientConnection OnClientConnected;
 
     public ManualResetEvent allDone = new ManualResetEvent(false);
 
     private Socket server;
-    private Socket client;
     private int port = 29200;
-    private IPAddress address = IPAddress.Parse("127.0.0.1");
     private bool started = false;
 
     public TCPServer() {
-        IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
-        IPEndPoint localEndPoint = new IPEndPoint(address, port);
+        IPAddress ipAddress = IPAddress.Parse("192.168.1.25");
+        IPEndPoint localEndPoint = new IPEndPoint(ipAddress, port);
         server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         server.Bind(localEndPoint);
 
@@ -39,10 +36,16 @@ public class TCPServer {
         thread.Start();
     }
 
-    ~TCPServer() {
+    public void Close() {
         started = false;
-        server.Shutdown(SocketShutdown.Both);
-        server.Close();
+        if (server != null) {
+            try {
+                server.Shutdown(SocketShutdown.Both);
+            } catch (Exception e) {
+                Debug.LogWarning("Server did not shutdown properly: " + e.Message);
+            }
+            server.Close();
+        }
     }
 
     public void StartListening() {
@@ -60,24 +63,29 @@ public class TCPServer {
 
     public void AcceptCallback(IAsyncResult ar) {
         allDone.Set();
-        client = server.EndAccept(ar);
+        Socket client = server.EndAccept(ar);
         StateObject state = new StateObject();
-        OnClientConnected.Invoke();
+        state.socket = client;
         client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallback), state);
     }
 
     public void ReadCallback(IAsyncResult ar) {
         string content = string.Empty;
         StateObject state = (StateObject)ar.AsyncState;
+        Socket client = state.socket;
         int bytesRead = client.EndReceive(ar);
         if (bytesRead > 0) {
             state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
             content = state.sb.ToString();
-            if (content.IndexOf("<EOF>") > -1) {
-                OnDataReceived.Invoke(content);
-            } else {
-                client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallback), state);
+            if (content.IndexOf("\n") > -1) {
+                string[] splittedContent = content.Split(new string[] { "\n" }, StringSplitOptions.None);
+                for (int i = 0; i < splittedContent.Length - 1; i++) {
+                    OnDataReceived.Invoke(splittedContent[i]);
+                }
+                state.sb = new StringBuilder();
+                state.sb.Append(splittedContent[splittedContent.Length - 1]);
             }
+            client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallback), state);
         }
     }
 
