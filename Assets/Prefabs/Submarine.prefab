@@ -27,8 +27,9 @@ GameObject:
   - component: {fileID: 494930}
   - component: {fileID: 3329136}
   - component: {fileID: 2365316}
+  - component: {fileID: 136208159066530138}
   m_Layer: 0
-  m_Name: Cylinder001
+  m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -42,7 +43,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 440452}
-  - component: {fileID: 9589280}
   - component: {fileID: 114300755526721762}
   m_Layer: 0
   m_Name: Submarine
@@ -170,23 +170,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 138440}
   m_Mesh: {fileID: 4300002, guid: 64ca16358473841689ef4ca2acea3494, type: 3}
---- !u!95 &9589280
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 196860}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 64ca16358473841689ef4ca2acea3494, type: 3}
-  m_Controller: {fileID: 9100000, guid: 4adb1137b05114453bdc42f35cfb85e6, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -210,3 +193,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 6
+--- !u!136 &136208159066530138
+CapsuleCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 152988}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.2893646
+  m_Height: 1.23771
+  m_Direction: 2
+  m_Center: {x: 0.0010699992, y: 0.0005942942, z: 0.02553169}

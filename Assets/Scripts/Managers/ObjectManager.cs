@@ -16,76 +16,25 @@ public class ObjectManager : MonoBehaviour {
     public MainObject submarine;
     public MainObject deathStar;
 
+    public static ObjectManager Instance = null;
 
-    private TCPServer tcpServer;
     private Dictionary<ObjectType, MainObject> prefabs = new Dictionary<ObjectType, MainObject>();
     private Dictionary<int, MainObject> objects = new Dictionary<int, MainObject>();
     private int objectCounter = 0;
 
-    private bool first = true;
-
-    private Queue<TCPAction> followingActions = new Queue<TCPAction>();
+    private void Awake() {
+        if (Instance == null) {
+            Instance = this;
+        } else {
+            Destroy(gameObject);
+        }
+    }
 
     void Start () {
         LoadPrefabs();
-        tcpServer = new TCPServer();
-        tcpServer.OnDataReceived += new HandlePacketData(OnMessageReceived);
-        tcpServer.OnClientConnected += new HandleClientConnection(OnClientConnected);
 	}
 
-    void OnClientConnected() {
-        Debug.Log("Client connected");
-        tcpServer.Send(tcpServer.client, "Empty");
-    }
-
-    void OnMessageReceived(string message) {
-        Debug.Log("Received: " + message);
-        if (first) {
-            Debug.Log("Connection request: " + message);
-            first = false;
-            ConnectionJsonObject connectionJson = JsonUtility.FromJson<ConnectionJsonObject>(message);
-            tcpServer.Send(tcpServer.client, "{\"connection\": \"ok\"}");
-        } else {
-            try {
-                MainJsonObject jsonObj = JsonUtility.FromJson<MainJsonObject>(message);
-                jsonObj.contentObj = JsonUtility.FromJson<ContentJsonObject>(jsonObj.content);
-                followingActions.Enqueue(new TCPAction(jsonObj));
-            } catch (Exception e) {
-                Debug.LogError(e);
-            }
-        }
-        //tcpServer.Send(tcpServer.client, "Empty");
-    }
-
-    private void Update() {
-        while (followingActions.Count > 0) {
-            TCPAction action = followingActions.Dequeue();
-            switch (action.obj.action) {
-                case "Init":
-                    InitFigure(action.obj);
-                    break;
-                case "Create":
-                    CreateObject(action.obj);
-                    break;
-                case "Delete":
-                    DeleteObject(action.obj);
-                    break;
-                case "Update":
-                    UpdateObject(action.obj);
-                    break;
-                case "Get":
-                    GetObject(action.obj);
-                    break;
-                case "CameraTracking":
-                    TrackObject(action.obj);
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
-    private void InitFigure(MainJsonObject obj) {
+    public void InitFigure(MainJsonObject obj) {
         String typeFigure = obj.contentObj.typeFig;
         if (typeFigure == "2D") {
             CameraManager.Instance.Set2D();
@@ -94,12 +43,12 @@ public class ObjectManager : MonoBehaviour {
         }
     }
 
-    private void TrackObject(MainJsonObject obj) {
+    public void TrackObject(MainJsonObject obj) {
         MainObject o = objects[obj.contentObj.id];
         CameraManager.Instance.TrackObject(o);
     }
 
-    private void CreateObject(MainJsonObject obj) {
+    public void CreateObject(MainJsonObject obj) {
         if (objects.ContainsKey(obj.contentObj.id)) {
             throw new Exception("Id already used");
         }
@@ -115,7 +64,7 @@ public class ObjectManager : MonoBehaviour {
         Debug.Log("Created " + o.type);
     }
 
-    private void DeleteObject(MainJsonObject obj) {
+    public void DeleteObject(MainJsonObject obj) {
         if (!objects.ContainsKey(obj.contentObj.id)) {
             throw new Exception("Id not used !");
         }
@@ -125,19 +74,21 @@ public class ObjectManager : MonoBehaviour {
         Debug.Log("Destroy " + o.type);
     }
 
-    private void UpdateObject(MainJsonObject obj) {
+    public void UpdateObject(MainJsonObject obj) {
         MainObject o = objects[obj.contentObj.id];
         ContentJsonObject content = obj.contentObj;
         o.SetPosition(content.coordX, content.coordY, content.coordZ);
         o.SetEulerRotation(obj.contentObj.rotX, obj.contentObj.rotY, obj.contentObj.rotZ);
         o.SetSize(content.dimX, content.dimY, content.dimZ);
+        //o.SetColor();
     }
 
 
-    private void GetObject(MainJsonObject obj) {
+    public void GetObject(MainJsonObject obj) {
         MainObject o = objects[obj.contentObj.id];
         ContentJsonObject content = obj.contentObj;
-        tcpServer.Send(tcpServer.client, content.ToString());
+        String message = JsonUtility.ToJson(content);
+        NetworkManager.Instance.Send(message);
     }
 
     private void LoadPrefabs() {

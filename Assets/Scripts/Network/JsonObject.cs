@@ -2,17 +2,20 @@
 using System.Collections.Generic;
 
 public class MainJsonObject {
+
     public string action;
     public string content;
     public ContentJsonObject contentObj;
     public int msgId;
-
 }
+
 public class ConnectionJsonObject {
+
     public string connection;
 }
 
 public class ContentJsonObject {
+
     public int id = -1;
     public int type;
     public string typeFig;
