@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.UI;
 
 public delegate void HandlePacketData(string message);
 public delegate void HandleClientConnection();
@@ -23,7 +24,7 @@ public class TCPServer {
     public ManualResetEvent allDone = new ManualResetEvent(false);
 
     private Socket server;
-    private Socket client;
+    public Socket client;
     private int port = 29200;
     private IPAddress address = IPAddress.Parse("127.0.0.1");
     private bool started = false;
@@ -71,17 +72,22 @@ public class TCPServer {
         StateObject state = (StateObject)ar.AsyncState;
         int bytesRead = client.EndReceive(ar);
         if (bytesRead > 0) {
+            Debug.Log(bytesRead);
             state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
             content = state.sb.ToString();
-            if (content.IndexOf("<EOF>") > -1) {
-                OnDataReceived.Invoke(content);
-            } else {
-                client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallback), state);
+            while (content.IndexOf("<EOF>") > -1) {
+                int start = content.IndexOf("{");
+                int end = content.IndexOf("<EOF>");
+                string message = content.Substring(start, end - start);
+                content = content.Substring(end + 5);
+                OnDataReceived.Invoke(message);
+                state = new StateObject();
             }
+            client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallback), state);
         }
     }
 
-    private void Send(Socket handler, string data) {
+    public void Send(Socket handler, string data) {
         byte[] writeBuffer = Encoding.ASCII.GetBytes(data);
         handler.BeginSend(writeBuffer, 0, writeBuffer.Length, 0, new AsyncCallback(SendCallback), handler);
     }
@@ -90,7 +96,7 @@ public class TCPServer {
         try {
             server.EndSend(ar);
         } catch (Exception e) {
-            Console.WriteLine(e.ToString());
+            Debug.LogError(e.ToString());
         }
     }
 }
