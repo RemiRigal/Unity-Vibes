@@ -148,6 +148,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79db33e1eb7e8d849819883b91865d6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  plane: {fileID: 114430936072033888, guid: 2a257d16b09dac246b80cbd3750dd7a0, type: 2}
+  cube: {fileID: 114273894857557040, guid: 2c2081d7fec51d84c8b67a351ae7f3b0, type: 2}
+  sphere: {fileID: 114943950087537942, guid: e0adb2d72b20e974ba3f4ed84333b583, type: 2}
+  capsule: {fileID: 114929823871221542, guid: ee4df9a4a5990f842a7b97f12912bf4d, type: 2}
+  cylinder: {fileID: 114835419582877378, guid: f919361846c0ce84daea0e7a317cbe93, type: 2}
+  boat: {fileID: 114034857808110020, guid: 776ac05bba07447ebb0501c309eacdb2, type: 2}
+  submarine: {fileID: 114300755526721762, guid: 7bc650a8a5d0e4b8598bc43eeadd9428,
+    type: 2}
+  deathStar: {fileID: 114329739470526948, guid: 2b42a40de39a1974c95abc9925b1f4d3,
+    type: 2}
 --- !u!1 &1081079040
 GameObject:
   m_ObjectHideFlags: 0
@@ -239,6 +249,7 @@ GameObject:
   - component: {fileID: 2018669750}
   - component: {fileID: 2018669749}
   - component: {fileID: 2018669748}
+  - component: {fileID: 2018669753}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -310,9 +321,21 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2018669747}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: 0, y: 1, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2018669753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2018669747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c986b312dbfa9ce43a768cea145f7426, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mouseFactor: 0.1
