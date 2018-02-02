@@ -8,7 +8,9 @@ public class CameraManager : MonoBehaviour {
     private bool isTracking = false;
     private MainObject trackingTarget;
 
-    public float mouseFactor = 0.1f;
+    public float mouseMovementFactor = 10f;
+    public float movementFactor = 0.2f;
+    public float zoomFactor = 20f;
 
     public static CameraManager Instance = null;
     private void Awake() {
@@ -37,16 +39,29 @@ public class CameraManager : MonoBehaviour {
         isTracking = true;
     }
 
-    private void Update() {
-        if (Input.GetMouseButton(2)) {
-            float mouseX = Input.GetAxis("Mouse X");
-            float mouseY = Input.GetAxis("Mouse Y");
+    private float mouseX;
+    private float mouseY;
+    private float horizontal;
+    private float vertical;
+    private float jump;
+    private float mouseWheel;
 
-            transform.position -= new Vector3(mouseX, mouseY, 0) * mouseFactor;
-        }
+    private void Update() {
+        horizontal = Input.GetAxis("Horizontal");
+        vertical = Input.GetAxis("Vertical");
+        jump = Input.GetAxis("Jump");
+        transform.position += (-transform.forward * vertical + transform.right * horizontal + transform.up * jump) * movementFactor;
+
+        mouseWheel = Input.GetAxis("Mouse ScrollWheel");
+        transform.position += transform.forward * mouseWheel * zoomFactor;
 
         if (isTracking) {
             transform.LookAt(trackingTarget.transform);
+        } else if (Input.GetMouseButton(1)) {
+            mouseX = Input.GetAxis("Mouse X");
+            mouseY = Input.GetAxis("Mouse Y");
+            transform.RotateAround(transform.position, Vector3.up,  mouseX * mouseMovementFactor);
+            transform.RotateAround(transform.position, transform.right, - mouseY * mouseMovementFactor);
         }
     }
 }
