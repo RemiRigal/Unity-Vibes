@@ -20,7 +20,6 @@ public class ContentJsonObject {
     public int type;
     public string typeFig;
     public string color;
-    public string background;
     public float coordX;
     public float coordY;
     public float coordZ;
@@ -30,4 +29,12 @@ public class ContentJsonObject {
     public float dimX;
     public float dimY;
     public float dimZ;
+}
+
+public class SendMessageJson {
+    public string action;
+    public int msgId;
+    public int objId;
+    public string type;
+    public ContentJsonObject contentObj;
 }

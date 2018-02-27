@@ -48,5 +48,5 @@ public abstract class MainObject : MonoBehaviour {
 }
 
 public enum ObjectType : int {
-    Plane, Cube, Sphere, Capsule, Cylinder, Boat, Submarine, DeathStar, Plane2D
+    Plane, Cube, Sphere, Capsule, Cylinder, Boat, Submarine, Galleon, Plane2D
 }

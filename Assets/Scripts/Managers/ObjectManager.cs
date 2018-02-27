@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,7 +15,7 @@ public class ObjectManager : MonoBehaviour {
     public MainObject cylinder;
     public MainObject boat;
     public MainObject submarine;
-    public MainObject deathStar;
+    public MainObject galleon;
 
     public static ObjectManager Instance = null;
 
@@ -61,7 +62,7 @@ public class ObjectManager : MonoBehaviour {
         o.SetEulerRotation(obj.contentObj.rotX, obj.contentObj.rotY, obj.contentObj.rotZ);
         o.SetSize(obj.contentObj.dimX, obj.contentObj.dimY, obj.contentObj.dimZ);
         objects.Add(o.GetId(), o);
-        Debug.Log("Created " + o.type);
+        SendMessage(obj);
     }
 
     public void DeleteObject(MainJsonObject obj) {
@@ -69,25 +70,49 @@ public class ObjectManager : MonoBehaviour {
             throw new Exception("Id not used !");
         }
         MainObject o = objects[obj.contentObj.id];
+        int id = o.GetId();
+        SendMessage(obj);
         objects.Remove(o.GetId());
         Destroy(o.gameObject);
         Debug.Log("Destroy " + o.type);
     }
 
     public void UpdateObject(MainJsonObject obj) {
+        if (!objects.ContainsKey(obj.contentObj.id)) {
+            throw new Exception("Id not used !");
+        }
         MainObject o = objects[obj.contentObj.id];
         ContentJsonObject content = obj.contentObj;
         o.SetPosition(content.coordX, content.coordY, content.coordZ);
         o.SetEulerRotation(obj.contentObj.rotX, obj.contentObj.rotY, obj.contentObj.rotZ);
         o.SetSize(content.dimX, content.dimY, content.dimZ);
         //o.SetColor();
+        SendMessage(obj);
     }
 
 
     public void GetObject(MainJsonObject obj) {
+        if (!objects.ContainsKey(obj.contentObj.id)) {
+            throw new Exception("Id not used !");
+        }
+        //MainObject o = objects[obj.contentObj.id];
+        //ContentJsonObject content = obj.contentObj;
+        SendMessage(obj, obj.contentObj);
+    }
+
+    private void SendMessage(MainJsonObject obj, ContentJsonObject contentObj = null) {
         MainObject o = objects[obj.contentObj.id];
-        ContentJsonObject content = obj.contentObj;
-        String message = JsonUtility.ToJson(content);
+        int id = o.GetId();
+        SendMessageJson jsonObj = new SendMessageJson();
+        ObjectType type = (ObjectType)obj.contentObj.type;
+        jsonObj.action = obj.action;
+        jsonObj.type = prefabs[type].ToString();
+        jsonObj.msgId = obj.msgId;
+        jsonObj.objId = id;
+        if (contentObj != null){
+            jsonObj.contentObj = contentObj;
+        }
+        string message = JsonConvert.SerializeObject(jsonObj); 
         NetworkManager.Instance.Send(message);
     }
 
@@ -99,6 +124,6 @@ public class ObjectManager : MonoBehaviour {
         prefabs.Add(cylinder.type, cylinder);
         prefabs.Add(boat.type, boat);
         prefabs.Add(submarine.type, submarine);
-        prefabs.Add(deathStar.type, deathStar);
+        prefabs.Add(galleon.type, galleon);
     }
 }
