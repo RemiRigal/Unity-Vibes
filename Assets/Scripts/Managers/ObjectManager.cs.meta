@@ -1,10 +1,18 @@
 fileFormatVersion: 2
 guid: 79db33e1eb7e8d849819883b91865d6b
-timeCreated: 1511534477
+timeCreated: 1517583136
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - plane: {instanceID: 0}
+  - cube: {instanceID: 0}
+  - sphere: {instanceID: 0}
+  - capsule: {instanceID: 0}
+  - cylinder: {instanceID: 0}
+  - boat: {instanceID: 0}
+  - submarine: {instanceID: 0}
+  - deathStar: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

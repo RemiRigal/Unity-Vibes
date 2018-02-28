@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -35,9 +36,8 @@ public class NetworkManager : MonoBehaviour {
     }
 
     void OnMessageReceived(string message) {
-        //Debug.Log("Received: " + message);
-        MainJsonObject jsonObj = JsonUtility.FromJson<MainJsonObject>(message);
-        jsonObj.contentObj = JsonUtility.FromJson<ContentJsonObject>(jsonObj.content);
+        MainJsonObject jsonObj = JsonConvert.DeserializeObject<MainJsonObject>(message);
+        jsonObj.contentObj = JsonConvert.DeserializeObject<ContentJsonObject>(jsonObj.content);  
         followingActions.Enqueue(new TCPAction(jsonObj));
     }
 
