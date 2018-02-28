@@ -14,7 +14,7 @@ public class ObjectManager : MonoBehaviour {
     public MainObject cylinder;
     public MainObject boat;
     public MainObject submarine;
-    public MainObject deathStar;
+    public MainObject galleon;
 
     public static ObjectManager Instance = null;
 
@@ -99,6 +99,6 @@ public class ObjectManager : MonoBehaviour {
         prefabs.Add(cylinder.type, cylinder);
         prefabs.Add(boat.type, boat);
         prefabs.Add(submarine.type, submarine);
-        prefabs.Add(deathStar.type, deathStar);
+        prefabs.Add(galleon.type, galleon);
     }
 }
