@@ -8,10 +8,10 @@ public abstract class MainObject : MonoBehaviour {
     public readonly bool is3D;
     private int id = -1;
     public ObjectType type;
-    private Material material;
+    private MeshRenderer meshRenderer;
 
-    private void Start() {
-        material = GetComponent<Material>();
+    private void Awake() {
+        meshRenderer = GetComponent<MeshRenderer>();
     }
 
     public int GetId() {
@@ -38,8 +38,8 @@ public abstract class MainObject : MonoBehaviour {
         SetSize(new Vector3(sx, sy, sz));
     }
 
-    public void SetColor(float r, float g, float b, float a) {
-        material.color = new Color(r, g, b, a);
+    public void SetColor(string color) {
+        meshRenderer.material.color = ObjectManager.colorDict[color];
     }
 
     public void SetSize(Vector3 newSize) {

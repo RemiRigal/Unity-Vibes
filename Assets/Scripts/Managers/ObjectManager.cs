@@ -19,6 +19,17 @@ public class ObjectManager : MonoBehaviour {
 
     public static ObjectManager Instance = null;
 
+    public static Dictionary<string, Color> colorDict = new Dictionary<string, Color> {
+            { "RED", Color.red },
+            { "GREEN", Color.green },
+            { "BLUE", Color.blue },
+            { "YELLOW", Color.yellow },
+            { "CYAN", Color.cyan },
+            { "MAGENTA", Color.magenta },
+            { "GREY", Color.grey },
+            { "BLACK", Color.black },
+            { "WHITE", Color.white }
+        };
     private Dictionary<ObjectType, MainObject> prefabs = new Dictionary<ObjectType, MainObject>();
     private Dictionary<int, MainObject> objects = new Dictionary<int, MainObject>();
     private int objectCounter = 0;
@@ -86,7 +97,7 @@ public class ObjectManager : MonoBehaviour {
         o.SetPosition(content.coordX, content.coordY, content.coordZ);
         o.SetEulerRotation(obj.contentObj.rotX, obj.contentObj.rotY, obj.contentObj.rotZ);
         o.SetSize(content.dimX, content.dimY, content.dimZ);
-        //o.SetColor();
+        o.SetColor(content.color);
         SendMessage(obj);
     }
 
@@ -95,8 +106,6 @@ public class ObjectManager : MonoBehaviour {
         if (!objects.ContainsKey(obj.contentObj.id)) {
             throw new Exception("Id not used !");
         }
-        //MainObject o = objects[obj.contentObj.id];
-        //ContentJsonObject content = obj.contentObj;
         SendMessage(obj, obj.contentObj);
     }
 
