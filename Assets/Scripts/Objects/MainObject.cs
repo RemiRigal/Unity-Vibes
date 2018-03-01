@@ -22,7 +22,6 @@ public abstract class MainObject : MonoBehaviour {
         if (objectAnimation != null && objectAnimation.animate) {
             AnimationFrame frame = objectAnimation.GetFrame(Time.deltaTime);
             if (frame != null) {
-                Debug.Log("Update");
                 transform.position = frame.position;
                 transform.rotation = frame.rotation;
             }

@@ -19,6 +19,7 @@ public class ContentJsonObject {
     public int id = -1;
     public int type;
     public string typeFig;
+    public string scene;
     public string color;
     public float coordX;
     public float coordY;

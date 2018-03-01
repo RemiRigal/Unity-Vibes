@@ -49,6 +49,7 @@ public class ObjectManager : MonoBehaviour {
 	}
 
     public void InitFigure(MainJsonObject obj) {
+        // TODO: Scene
         String typeFigure = obj.contentObj.typeFig;
         if (typeFigure == "2D") {
             CameraManager.Instance.Set2D();
@@ -59,7 +60,7 @@ public class ObjectManager : MonoBehaviour {
 
     public void Animate(MainJsonObject obj) {
         float dt = obj.contentObj.dt;
-        JObject token = JObject.Parse(obj.content);
+        JObject token = JObject.Parse(JObject.Parse(obj.content)["frames"].ToString());
         foreach (string key in token.Properties().Select(p => p.Name).ToList()) {
             List<List<float>> array = JArray.Parse(token[key].ToString()).ToObject<List<List<float>>>();
             List<Vector3> positions = new List<Vector3>();

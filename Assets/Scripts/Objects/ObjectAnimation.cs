@@ -29,10 +29,11 @@ public class ObjectAnimation {
 
     public AnimationFrame GetFrame(float dt) {
         animationTime += dt;
-        if (animationTime > animationStart + animationDuration) {
-            return null;
-        }
         int frameIndex = (int) Mathf.Floor((animationTime - animationStart) / deltaTime);
+        if (frameIndex + 1 >= positions.Count || animationTime > animationStart + animationDuration) {
+            animate = false;
+            return new AnimationFrame(positions[positions.Count - 1], Quaternion.Euler(rotations[rotations.Count - 1]));
+        }
         float ratio = ((animationTime - animationStart) % deltaTime) / deltaTime;
         Vector3 position = Vector3.Lerp(positions[frameIndex], positions[frameIndex+1], ratio);
         Quaternion rotation = Quaternion.Euler(Vector3.Lerp(rotations[frameIndex], rotations[frameIndex + 1], ratio));
