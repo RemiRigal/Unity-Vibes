@@ -55,7 +55,7 @@ public class MapGenerator : MonoBehaviour {
         List<Vector3> vertices = new List<Vector3>();
         List<int> triangles = new List<int>();
 
-        Random.seed = perlinSeed;
+        Random.InitState(perlinSeed);
         float randX = Random.value;
         float randY = Random.value;
 

@@ -14,8 +14,8 @@ public class AnimationManager : MonoBehaviour {
         }
     }
 
-    public void AddAnimation() {
-
+    public void AddAnimation(MainObject obj, ObjectAnimation animation) {
+        obj.SetAnimation(animation);
     }
 
     void Start () {

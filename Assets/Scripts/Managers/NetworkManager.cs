@@ -37,7 +37,7 @@ public class NetworkManager : MonoBehaviour {
 
     void OnMessageReceived(string message) {
         MainJsonObject jsonObj = JsonConvert.DeserializeObject<MainJsonObject>(message);
-        jsonObj.contentObj = JsonConvert.DeserializeObject<ContentJsonObject>(jsonObj.content);  
+        jsonObj.contentObj = JsonConvert.DeserializeObject<ContentJsonObject>(jsonObj.content);
         followingActions.Enqueue(new TCPAction(jsonObj));
     }
 
@@ -62,6 +62,9 @@ public class NetworkManager : MonoBehaviour {
                     break;
                 case "CameraTracking":
                     ObjectManager.Instance.TrackObject(action.obj);
+                    break;
+                case "Animation":
+                    ObjectManager.Instance.Animate(action.obj);
                     break;
             }
         }

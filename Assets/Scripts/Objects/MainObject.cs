@@ -9,11 +9,23 @@ public abstract class MainObject : MonoBehaviour {
     private int id = -1;
     public ObjectType type;
     private MeshRenderer meshRenderer;
+    private ObjectAnimation objectAnimation;
 
     private void Awake() {
         meshRenderer = GetComponent<MeshRenderer>();
         if (meshRenderer == null) {
             meshRenderer = GetComponentInChildren<MeshRenderer>();
+        }
+    }
+
+    private void Update() {
+        if (objectAnimation != null && objectAnimation.animate) {
+            AnimationFrame frame = objectAnimation.GetFrame(Time.deltaTime);
+            if (frame != null) {
+                Debug.Log("Update");
+                transform.position = frame.position;
+                transform.rotation = frame.rotation;
+            }
         }
     }
 
@@ -45,6 +57,11 @@ public abstract class MainObject : MonoBehaviour {
         if (color != "") {
             meshRenderer.material.color = ObjectManager.colorDict[color];
         }
+    }
+
+    public void SetAnimation(ObjectAnimation objectAnimation) {
+        this.objectAnimation = objectAnimation;
+        this.objectAnimation.Start();
     }
 
     public void SetSize(Vector3 newSize) {

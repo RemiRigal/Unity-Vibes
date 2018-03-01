@@ -29,6 +29,7 @@ public class ContentJsonObject {
     public float dimX;
     public float dimY;
     public float dimZ;
+    public float dt;
 }
 
 public class SendMessageJson {

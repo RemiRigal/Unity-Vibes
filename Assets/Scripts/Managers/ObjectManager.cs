@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -52,6 +54,22 @@ public class ObjectManager : MonoBehaviour {
             CameraManager.Instance.Set2D();
         } else {
             CameraManager.Instance.Set3D();
+        }
+    }
+
+    public void Animate(MainJsonObject obj) {
+        float dt = obj.contentObj.dt;
+        JObject token = JObject.Parse(obj.content);
+        foreach (string key in token.Properties().Select(p => p.Name).ToList()) {
+            List<List<float>> array = JArray.Parse(token[key].ToString()).ToObject<List<List<float>>>();
+            List<Vector3> positions = new List<Vector3>();
+            List<Vector3> rotations = new List<Vector3>();
+            foreach (List<float> frame in array) {
+                positions.Add(new Vector3(frame[0], frame[1], frame[2]));
+                rotations.Add(new Vector3(frame[3], frame[4], frame[5]));
+            }
+            ObjectAnimation animation = new ObjectAnimation(dt, positions, rotations);
+            AnimationManager.Instance.AddAnimation(objects[int.Parse(key)], animation);
         }
     }
 

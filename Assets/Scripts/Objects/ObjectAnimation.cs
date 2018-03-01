@@ -22,23 +22,31 @@ public class ObjectAnimation {
         animationDuration = positions.Count * deltaTime;
     }
 
-    public AnimationFrame GetFrame(float time) {
-        if (time < animationStart || time > animationStart + animationDuration) {
+    public void Start() {
+        animationTime = 0f;
+        animate = true;
+    }
+
+    public AnimationFrame GetFrame(float dt) {
+        animationTime += dt;
+        if (animationTime > animationStart + animationDuration) {
             return null;
         }
-        int frameIndex = (int) Mathf.Floor((time - animationStart) / deltaTime);
-        float ratio = ((time - animationStart) % deltaTime) / deltaTime;
+        int frameIndex = (int) Mathf.Floor((animationTime - animationStart) / deltaTime);
+        float ratio = ((animationTime - animationStart) % deltaTime) / deltaTime;
         Vector3 position = Vector3.Lerp(positions[frameIndex], positions[frameIndex+1], ratio);
         Quaternion rotation = Quaternion.Euler(Vector3.Lerp(rotations[frameIndex], rotations[frameIndex + 1], ratio));
         return new AnimationFrame(position, rotation);
     }
+}
 
-    public class AnimationFrame {
-        public Vector3 position;
-        public Quaternion rotation;
-        public AnimationFrame(Vector3 position, Quaternion rotation) {
-            this.position = position;
-            this.rotation = rotation;
-        }
+public class AnimationFrame {
+
+    public Vector3 position;
+    public Quaternion rotation;
+
+    public AnimationFrame(Vector3 position, Quaternion rotation) {
+        this.position = position;
+        this.rotation = rotation;
     }
 }
