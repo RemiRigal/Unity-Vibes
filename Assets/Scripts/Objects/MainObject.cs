@@ -12,6 +12,9 @@ public abstract class MainObject : MonoBehaviour {
 
     private void Awake() {
         meshRenderer = GetComponent<MeshRenderer>();
+        if (meshRenderer == null) {
+            meshRenderer = GetComponentInChildren<MeshRenderer>();
+        }
     }
 
     public int GetId() {
