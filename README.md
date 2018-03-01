@@ -10,7 +10,7 @@ UnityVibes must be used with the python package [PyUnityVibes](https://github.co
 ## Installation
 
 ### UnityVibes
-Just run the binaries corresponding to your system. [Coming Soon]
+Just run the binary corresponding to your OS, see availables [releases](https://github.com/RemiRigal/Unity-Vibes/releases).
 
 ### Python package
 It is necessary to download the PyUnityVibes python package, see the dedicated [GitHub page](https://github.com/NoelieRamuzat/PyUnityVibes).  
