@@ -59,6 +59,12 @@ public class ObjectManager : MonoBehaviour {
     }
 
     public void Animate(MainJsonObject obj) {
+        SendMessageJson jsonObj = new SendMessageJson();
+        jsonObj.action = obj.action;
+        jsonObj.msgId = obj.msgId;
+        string message = JsonConvert.SerializeObject(jsonObj);
+        NetworkManager.Instance.Send(message);
+
         float dt = obj.contentObj.dt;
         JObject token = JObject.Parse(JObject.Parse(obj.content)["frames"].ToString());
         foreach (string key in token.Properties().Select(p => p.Name).ToList()) {
