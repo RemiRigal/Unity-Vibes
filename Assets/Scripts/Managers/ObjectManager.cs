@@ -72,6 +72,7 @@ public class ObjectManager : MonoBehaviour {
         o.SetId(obj.contentObj.id);
         o.SetEulerRotation(obj.contentObj.rotX, obj.contentObj.rotY, obj.contentObj.rotZ);
         o.SetSize(obj.contentObj.dimX, obj.contentObj.dimY, obj.contentObj.dimZ);
+        o.SetColor(obj.contentObj.color);
         objects.Add(o.GetId(), o);
         SendMessage(obj);
     }

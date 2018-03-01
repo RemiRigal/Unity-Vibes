@@ -42,7 +42,9 @@ public abstract class MainObject : MonoBehaviour {
     }
 
     public void SetColor(string color) {
-        meshRenderer.material.color = ObjectManager.colorDict[color];
+        if (color != "") {
+            meshRenderer.material.color = ObjectManager.colorDict[color];
+        }
     }
 
     public void SetSize(Vector3 newSize) {
